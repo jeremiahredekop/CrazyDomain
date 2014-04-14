@@ -27,10 +27,15 @@ module Envelope =
     let EnvelopeWithDefaults item = 
         Envelope (Guid.NewGuid()) (DateTimeOffset.Now) item
    
-
 [<CLIMutable>]
 type Reservation = {
     Date : DateTime
     Name : string
     Email : string
     Quantity : int }
+
+[<CLIMutable>]
+type Notification = {
+    About : Guid
+    Type : string
+    Message : string }
