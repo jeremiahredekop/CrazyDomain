@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Messages.fs" />
+    <Compile Include="DomainModel.fs" />
     <Compile Include="Renditions.fs" />
     <Compile Include="Controller.fs" />
     <Compile Include="Infrastructure.fs" />

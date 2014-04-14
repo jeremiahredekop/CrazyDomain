@@ -10,7 +10,7 @@ type HomeController() =
     inherit ApiController()
     member this.Get() = new HttpResponseMessage()
 
-type ReservationController() = 
+type ReservationsController() = 
     inherit ApiController()
     let subject = new Subject<Envelope<MakeReservation>>()
     member this.Post (rendition : MakeReservationRendition) = 
