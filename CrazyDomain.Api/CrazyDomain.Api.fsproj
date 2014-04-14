@@ -33,6 +33,10 @@
     <DocumentationFile>bin\Release\CrazyDomain.Api.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FSharp.Reactive">
+      <HintPath>..\packages\FSharp.Reactive.2.2.131002\lib\net40\FSharp.Reactive.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>True</Private>
@@ -77,6 +81,7 @@
     <Compile Include="Controller.fs" />
     <Compile Include="Infrastructure.fs" />
     <None Include="packages.config" />
+    <None Include="app.config" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
