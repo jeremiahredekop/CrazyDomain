@@ -11,6 +11,7 @@ open FSharp.Reactive
 
 
 type CompositionRoot(reservations : IReservations,
+                      notifications,
                       reservationRequestObserver) =
     interface IHttpControllerActivator with
         member this.Create(request, controllerDescriptor, controllerType) =
@@ -22,16 +23,18 @@ type CompositionRoot(reservations : IReservations,
                 |> Observable.subscribeObserver reservationRequestObserver
                 |> request.RegisterForDispose
                 c :> IHttpController
+            elif controllerType = typeof<NotificationsController> then
+                new NotificationsController(notifications) :> IHttpController
             else
                 raise
                 <| ArgumentException(
                     sprintf "Unknown controller type requested: %O" controllerType,
                      "controllerType")
 
-let ConfigureServices reservations reservationRequestObserver (config : HttpConfiguration) =
+let ConfigureServices reservations notifications reservationRequestObserver (config : HttpConfiguration) =
     config.Services.Replace(
         typeof<IHttpControllerActivator>,
-        CompositionRoot(reservations, reservationRequestObserver))
+        CompositionRoot(reservations, notifications, reservationRequestObserver))
 
 type HttpRouteDefaults = { Controller : string; Id : obj }
 let ConfigureRoutes (config : HttpConfiguration) = 
@@ -44,9 +47,9 @@ let ConfigureFormatting(config : HttpConfiguration) =
     config.Formatters.JsonFormatter.SerializerSettings.ContractResolver <-
         Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
 
-let Configure reservations reservationRequestObserver config = 
+let Configure reservations notifications reservationRequestObserver config = 
     ConfigureRoutes config
     ConfigureFormatting config
-    ConfigureServices reservations reservationRequestObserver config
+    ConfigureServices reservations notifications reservationRequestObserver config
 
 

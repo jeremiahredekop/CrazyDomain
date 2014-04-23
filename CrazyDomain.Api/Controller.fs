@@ -23,9 +23,36 @@ type ReservationsController() =
             }
             |> EnvelopeWithDefaults
         subject.OnNext cmd
-        new HttpResponseMessage(HttpStatusCode.Accepted)
+
+        this.Request.CreateResponse(
+                HttpStatusCode.Accepted,
+                {
+                    Links = 
+                        [| {
+                            Rel = "http://ploeh.samples/notifications"
+                            Href = "notifications/" + cmd.Id.ToString "N" } |] })
+        
     interface IObservable<Envelope<MakeReservation>> with
         member this.Subscribe observer = subject.Subscribe observer
     override this.Dispose disposing =
         if disposing then subject.Dispose()
         base.Dispose disposing
+
+    type NotificationsController(notifications : Notifications.INotifications) =
+        inherit ApiController()
+
+        member this.Get id =
+            let toRendition (n : Envelope<Notification>) = {
+                About = n.Item.About.ToString()
+                Type = n.Item.Type
+                Message = n.Item.Message }
+            let matches = 
+                notifications
+                |> Notifications.About id
+                |> Seq.map toRendition
+                |> Seq.toArray
+
+            this.Request.CreateResponse(HttpStatusCode.OK, {Notifications = matches})
+
+
+        member this.Notifications = notifications

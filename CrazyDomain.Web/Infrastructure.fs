@@ -63,5 +63,6 @@ type Global() =
         
         Configure 
             (reservations |> ToReservations)
+            (notifications |> Notifications.ToNotifications)
             (Observer.Create agent.Post)
             GlobalConfiguration.Configuration            
